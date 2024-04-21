@@ -2,6 +2,9 @@ source ~/.config/zsh/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 
 skip_global_compinit=1
 
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
 
 autoload -Uz vcs_info
 precmd() { vcs_info }
