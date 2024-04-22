@@ -13,7 +13,10 @@ autoload -Uz vcs_info
 precmd() { vcs_info }
 
 zstyle ':vcs_info:git:*' formats "%F{magenta}%c%u(%b)%f on %F{cyan}%r%f "
-#"%{$fg[red]%}%s:%r %{$fg[magenta]%}(%b) %m%u%c "
+zstyle ':vcs_info:*' actionformats " %F{magenta}%c%u(%b)%f %a on %F{cyan}%r%f "
+zstyle ':vcs_info:*' stagedstr "%F{green}"
+zstyle ':vcs_info:*' unstagedstr "%F{red}"
+zstyle ':vcs_info:*' check-for-changes true
 
 if [[ $HOST == "Chester-Desktop" ]]
 then
