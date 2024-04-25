@@ -18,15 +18,26 @@ zstyle ':vcs_info:*' stagedstr "%F{green}"
 zstyle ':vcs_info:*' unstagedstr "%F{red}"
 zstyle ':vcs_info:*' check-for-changes true
 
-if [[ $HOST == "Chester-Desktop" ]]
-then
-  SHORTHOST="MyPC"
-elif [[ $HOST == "chestsh-server" ]]
-then
-  SHORTHOST="GateWay"
-else
-  SHORTHOST=%m
-fi
+bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
+bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
+
+#if [[ $HOST == "Chester-Desktop" ]]
+#then
+#  SHORTHOST="MyPC"
+#elif [[ $HOST == "chestsh-server" ]]
+#then
+#  SHORTHOST="GateWay"
+#else
+#  SHORTHOST=%m
+#fi
+
+SHORTHOST=%m
+case $HOST {
+    ( "Chester-Desktop" ) SHORTHOST="MyPC" ;;
+    ( "chestsh-server" ) SHORTHOST="GateWay" ;;
+    ( "LAPTOP-chestsh") SHORTHOST="MyLaptop" ;;
+}
+
 
 setopt PROMPT_SUBST
 PROMPT='$SHORTHOST %F{blue}%2~%f ${vcs_info_msg_0_}$ '
