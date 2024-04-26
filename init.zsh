@@ -6,30 +6,50 @@ HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
 
+#autoload colors; colors;
+#export LSCOLORS="Gxfxcxdxbxegedabagacad"
+setopt PROMPT_SUBST
 setopt APPEND_HISTORY
 
 
-autoload -Uz vcs_info
-precmd() { vcs_info }
+alias ls="ls --color=auto"
 
-zstyle ':vcs_info:git:*' formats "%F{magenta}%c%u(%b)%f on %F{cyan}%r%f "
-zstyle ':vcs_info:*' actionformats " %F{magenta}%c%u(%b)%f %a on %F{cyan}%r%f "
-zstyle ':vcs_info:*' stagedstr "%F{green}"
-zstyle ':vcs_info:*' unstagedstr "%F{red}"
-zstyle ':vcs_info:*' check-for-changes true
+ZSH_THEME_GIT_PROMPT_PREFIX="%f%F{cyan}["
+ZSH_THEME_GIT_PROMPT_SUFFIX="]%f"
+ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}*%f"
+ZSH_THEME_GIT_PROMPT_CLEAN=""
+
+# show git branch/tag, or name-rev if on detached head
+parse_git_branch() {
+  command git symbolic-ref -q HEAD 2>/dev/null
+}
+
+parse_git_commit() {
+  command git rev-parse --short HEAD 2>/dev/null
+}
+
+parse_git_dirty() {
+  if command git diff-index --quiet HEAD 2> /dev/null; then
+    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
+  else
+    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
+  fi
+}
+
+# if in a git repo, show dirty indicator + git branch
+git_custom_status() {
+  local git_branch="$(parse_git_branch)"
+  local git_commit="$(parse_git_commit)"
+  if [[ -n "$git_branch" ]]; then
+    echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX${git_branch#(refs/heads/|tags/)}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  elif [[ -n "$git_commit" ]]; then
+    echo "$(parse_git_dirty)%F{yellow}DETACHED%f$ZSH_THEME_GIT_PROMPT_PREFIX${git_commit}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  fi
+}
 
 bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
 bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
 
-#if [[ $HOST == "Chester-Desktop" ]]
-#then
-#  SHORTHOST="MyPC"
-#elif [[ $HOST == "chestsh-server" ]]
-#then
-#  SHORTHOST="GateWay"
-#else
-#  SHORTHOST=%m
-#fi
 
 SHORTHOST=%m
 case $HOST {
@@ -39,7 +59,8 @@ case $HOST {
 }
 
 
-setopt PROMPT_SUBST
-PROMPT='$SHORTHOST %F{blue}%2~%f ${vcs_info_msg_0_}$ '
+RPS1='$(git_custom_status) $EPS1'
+
+PROMPT='%F{green}%n%f@%F{magenta}$SHORTHOST%f %F{blue}%2~%f $ '
 
 
