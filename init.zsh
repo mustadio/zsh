@@ -43,7 +43,7 @@ git_custom_status() {
   if [[ -n "$git_branch" ]]; then
     echo "$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_PREFIX${git_branch#(refs/heads/|tags/)}$ZSH_THEME_GIT_PROMPT_SUFFIX"
   elif [[ -n "$git_commit" ]]; then
-    echo "$(parse_git_dirty)%F{yellow}DETACHED%f$ZSH_THEME_GIT_PROMPT_PREFIX${git_commit}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+    echo "$(parse_git_dirty)%F{yellow}detached%f at $ZSH_THEME_GIT_PROMPT_PREFIX${git_commit}$ZSH_THEME_GIT_PROMPT_SUFFIX"
   fi
 }
 
