@@ -9,7 +9,7 @@ SAVEHIST=100000
 #autoload colors; colors;
 #export LSCOLORS="Gxfxcxdxbxegedabagacad"
 setopt PROMPT_SUBST
-setopt APPEND_HISTORY
+setopt SHARE_HISTORY
 
 
 alias ls="ls --color=auto"
